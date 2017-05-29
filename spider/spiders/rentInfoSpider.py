@@ -26,20 +26,30 @@ class NgaSpider(scrapy.Spider):
         selector = Selector(response)
         content_list = selector.xpath("//ul[@class='listUl']")
         for content in content_list:
-            topic = content.xpath("//div[@class='des']")
-            for item in topic:
-                x = item.xpath('//')
-                print len(x)
-                title = item.xpath('/h2/a[1]/text()').extract()
-                link = item.xpath('/h2/a[1]/@href').extract()
-                room = item.xpath('/p[1]/text()').extract()
-                add1 = item.xpath('/p[2]/a[1]/text()').extract()
-                add2 = item.xpath('/p[2]/text()').extract()
-                geren = item.xpath('/p[3]/span/text()').extract() + item.xpath('/p[3]/text()').extract()
-                print title
-                print link
-                print room
-                print str(add1)+" "+str(add2)
-                print geren
-                print "-----------------------------------"
+            topic = content.xpath("./li/div[@class='des']")
+            money = content.xpath("./li/div[@class='listliright']")
+            sendtime = content.xpath("./li/div[@class='listliright']")
+            print len(money),len(sendtime)
+            for item, m, time in zip(topic, money, sendtime):
+                title = item.xpath('./h2/a[1]/text()').extract()
+                link = item.xpath('./h2/a[1]/@href').extract()
+                room = item.xpath('./p[1]/text()').extract()
+                add1 = item.xpath('./p[2]/a[1]/text()').extract()
+                # add2 = item.xpath('./p[2]/text()').extract()
 
+                geren = item.xpath('./p[3]/span/text()').extract()
+                # geren2 = item.xpath('./p[3]/text()').extract()
+                s = title[0].encode('utf8')
+
+                mone = m.xpath('./div[@class="money"]/b/text()').extract()
+                t = time.xpath('./div[@class="sendTime"]/text()').extract()
+
+                print s.lstrip()
+                print t[0].encode('utf8').lstrip()
+                # print title[0].encode('utf8')
+                print link[0].encode('utf8')
+                print room[0].encode('utf8')
+                print mone[0].encode('utf8')
+                print add1[0].encode('utf8')  # + " " + add2[0].encode('utf8')
+                print geren[0].encode('utf8')  # +" "+ geren2[0].encode('utf8')
+                print "-----------------------------------"
